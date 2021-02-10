@@ -1,6 +1,7 @@
 import numpy as np
+import random
 from dungeon.dungeon import Dungeon
-
+from action import Action
 
 # # Exercise 1 - Modifying the environment
 # 
@@ -25,23 +26,32 @@ class IceDungeon(Dungeon):
         # In order to explicitely show that the way you represent states doesn't matter, 
         # we will assign a random index for each coordinate of the grid        
         index_states = np.arange(0, N*N)
-        np.random.shuffle(index_states)
-        self.actions_dict = {0:"up", 1:"down", 2:"left", 3:"right"}
-        self.coord_to_index_state = index_states.reshape(N,N)    
+        np.random.shuffle(index_states)     
+        self.coord_to_index_state = index_states.reshape(N,N) 
+        self.action = Action()   
         
     def step(self, action):
         _, reward, done = super().step(action)
+        state = self.coord_to_index_state[ self.position_agent[0], self.position_agent[1]]
+        if done:
+            return state, reward, done
+
         # There is a 40% chance the agent will slip, 
         # and an equal 10% chance for each direction
         # So get a random number 0 - 9 for each possibility
-        rnd_no = randrange(0, 9)
-        if rnd_no < 4:
-            _, reward_slip, done = super().step(self.actions_dict.get(rnd_no))
-            reward += reward_slip
-        
-        state = self.coord_to_index_state[ self.position_agent[0], self.position_agent[1]]
-        
-        return state, reward, done
+        rnd_no = random.randint(0, 9)
+        is_slip = rnd_no < 4
+        if is_slip == False:
+            return state, reward, done
+
+        _, reward_slip, done = super().step(self.action.index_to_actions(rnd_no))
+
+        # Updated reward combines the reward for the 2 steps, 
+        # and removes the timestep reward of -1
+        updated_reward = reward + reward_slip + 1   
+        self.time_elapsed -= 1
+        state = self.coord_to_index_state[ self.position_agent[0], self.position_agent[1]]       
+        return state, updated_reward, done
     
     def reset(self):
         
