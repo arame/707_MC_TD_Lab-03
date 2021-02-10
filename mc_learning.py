@@ -19,7 +19,27 @@ class MC_Learning:
         self.values = np.zeros(N, N)
     
     def update_values(self, rollout):
-        ...
+        # Calculate returns by going backwards
+        g = 0
+    
+        rollout_with_returns = []
+        for s, r in rollout[::-1]:
+            
+            g = g*self.gamma + r
+            
+            rollout_with_returns.append( (s,g))
+        
+        rollout_with_returns = rollout_with_returns[::-1] 
+            
+        # Update the values
+        for s, g in rollout_with_returns:
+            self.counter[s] += 1
+            self.values[s] += 1/self.counter[s]*( g - self.values[s] )
         
     def display_values(self):
-        ...
+        value_matrix = np.zeros( (self.size_environment, self.size_environment) )
+        for i in range(self.size_environment):
+            for j in range(self.size_environment):
+                state = self.coord_to_index_state[i, j]
+                value_matrix[i,j] = self.values[state]
+        return value_matrix
