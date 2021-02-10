@@ -44,12 +44,15 @@ class IceDungeon(Dungeon):
         if is_slip == False:
             return state, reward, done
 
-        _, reward_slip, done = super().step(self.action.index_to_actions(rnd_no))
+        _, reward_slip, done = super().step(self.action.index_to_actions.get(rnd_no))
 
-        # Updated reward combines the reward for the 2 steps, 
+        # Updated reward combines the reward for the 2 moves, 
         # and removes the timestep reward of -1
-        updated_reward = reward + reward_slip + 1   
+        updated_reward = reward + reward_slip  
+        # Only 1 timestep was complete
+        # So adjust the time elapsed and the reward accordingly 
         self.time_elapsed -= 1
+        updated_reward += 1
         state = self.coord_to_index_state[ self.position_agent[0], self.position_agent[1]]       
         return state, updated_reward, done
     
