@@ -14,9 +14,12 @@ import numpy as np
 
 class MC_Learning:
    
-    def __init__(self, N):
-        self.N = N
-        self.values = np.zeros(N, N)
+    def __init__(self, envir, gamma):
+        self.size_environment = envir.size
+        self.gamma = gamma
+        self.coord_to_index_state = envir.coord_to_index_state
+        self.values = np.zeros( (self.size_environment*self.size_environment) )
+        self.counter = np.zeros( (self.size_environment*self.size_environment) )
     
     def update_values(self, rollout):
         # Calculate returns by going backwards

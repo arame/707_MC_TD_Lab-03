@@ -1,4 +1,4 @@
-
+import numpy as np
 
 # # Exercise 3: TD-learning
 # 
@@ -29,6 +29,3 @@ class TD_Learning():
                 value_matrix[i,j] = self.values[state]
                 
         return value_matrix
-        
-    def display_values(self):
-        ...

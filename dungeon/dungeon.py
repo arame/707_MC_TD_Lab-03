@@ -58,13 +58,13 @@ class Dungeon:
         bump = False
         
         # action is 'up', 'down', 'left', or 'right'
-        if action == 'up':
+        if action.name == 'up':
             next_position = np.array( (self.position_agent[0] - 1, self.position_agent[1] ) )
-        if action == 'down':
+        if action.name == 'down':
             next_position = np.array( (self.position_agent[0] + 1, self.position_agent[1] ) )
-        if action == 'left':
+        if action.name == 'left':
             next_position = np.array( (self.position_agent[0] , self.position_agent[1] - 1 ) )
-        if action == 'right':
+        if action.name == 'right':
             next_position = np.array( (self.position_agent[0] , self.position_agent[1] + 1) )
         
         # If the agent bumps into a wall, it doesn't move
